@@ -1,6 +1,6 @@
 const mongoose  = require('mongoose');
 
-const MONGOURI = "mongodb+srv://Jvdpd:1561379@cluster.fh4ra.mongodb.net/?retryWrites=true&w=majority";
+const MONGOURI = "mongodb+srv://Jvdpd:Jvdpd1021@cluster.fh4ra.mongodb.net/?retryWrites=true&w=majority";
 const InitiateMongoServer = async () => {
   try {
     await mongoose.connect(MONGOURI, {
