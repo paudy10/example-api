@@ -7,7 +7,7 @@ const Blog = require("./model/blog");
 const Price = require('./model/price');
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const port = 3001;
+const PORT = process.env.PORT || 5000;
 
 
 
