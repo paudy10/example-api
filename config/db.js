@@ -1,6 +1,6 @@
 const mongoose  = require('mongoose');
 
-const MONGOURI = "mongodb://localhost:27017/react-node-p1";
+const MONGOURI = "mongodb+srv://Jvdpd:1561379@cluster.fh4ra.mongodb.net/?retryWrites=true&w=majority";
 const InitiateMongoServer = async () => {
   try {
     await mongoose.connect(MONGOURI, {
