@@ -376,24 +376,15 @@ app.post("/api/v1/setblog", async (req, res, next) => {
 app.post("/api/v1/sendContactForm", async (req, res, next) => {
     let { username, desc, email } = req.body;
 
-    if (!existBlog) {
-        const newBlog = new Blog({
-            "id": id,
-            "title": title,
-            "desc": desc,
-            "img": img,
-            "alt": alt,
-            "author": author
-        })
-        await newBlog.save();
-        res.status(200).json({
-            msg: "بلاگ شما با موفقیت ساخته شد  !"
-        })
-    } else {
-        res.status(400).json({
-            msg: "بلاگی با این آیدی موجود است  !"
-        })
-    }
+    const newComment = new Contact({
+        "username": username,
+        "desc": desc,
+        "email": email
+    })
+    await newComment.save();
+    res.status(200).json({
+        msg: "متن شما با موفقیت ارسال شد  !"
+    })
     next()
 })
 
