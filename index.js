@@ -330,6 +330,12 @@ app.get("/api/v1/getprice", async (req, res, next) => {
     next();
 });
 
+app.get("/api/v1/getcontact", async (req, res, next) => {
+    const data = await Contact.find()
+    res.json(data);
+    next();
+});
+
 app.get("/api/v1/getblog/:id", (req, res, next) => {
     let id = req.params.id;
     if (id) {
@@ -375,16 +381,23 @@ app.post("/api/v1/setblog", async (req, res, next) => {
 
 app.post("/api/v1/sendContactForm", async (req, res, next) => {
     let { username, desc, email } = req.body;
+    if (username != '' || email != '', desc != '') {
+        const newComment = new Contact({
+            "username": username,
+            "desc": desc,
+            "email": email
+        })
+        await newComment.save();
+        res.status(200).json({
+            msg: "متن شما با موفقیت ارسال شد  !"
+        })
+    }
+    else {
+        res.status(400).json({
+            msg: "پر کردن تمامی فیلد ها ضروری است  !"
+        })
+    }
 
-    const newComment = new Contact({
-        "username": username,
-        "desc": desc,
-        "email": email
-    })
-    await newComment.save();
-    res.status(200).json({
-        msg: "متن شما با موفقیت ارسال شد  !"
-    })
     next()
 })
 
