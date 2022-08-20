@@ -4,6 +4,7 @@ const InitiateMongoServer = require("./config/db");
 const User = require("./model/user");
 const Admin = require('./model/admin');
 const Blog = require("./model/blog");
+const Contact = require("./model/contact");
 const Price = require('./model/price');
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
@@ -372,6 +373,29 @@ app.post("/api/v1/setblog", async (req, res, next) => {
     next()
 })
 
+app.post("/api/v1/sendContactForm", async (req, res, next) => {
+    let { username, desc, email } = req.body;
+
+    if (!existBlog) {
+        const newBlog = new Blog({
+            "id": id,
+            "title": title,
+            "desc": desc,
+            "img": img,
+            "alt": alt,
+            "author": author
+        })
+        await newBlog.save();
+        res.status(200).json({
+            msg: "بلاگ شما با موفقیت ساخته شد  !"
+        })
+    } else {
+        res.status(400).json({
+            msg: "بلاگی با این آیدی موجود است  !"
+        })
+    }
+    next()
+})
 
 app.post("/api/v1/setprice", async (req, res, next) => {
     let { id, title, price, option } = req.body;
@@ -397,14 +421,5 @@ app.post("/api/v1/setprice", async (req, res, next) => {
     next()
 })
 
-
-
-let data = {
-    prices: [
-        { id: 1, title: "تعرفه طلایی", price: 123000, options: "این تعرفه شامل اپشن های ..... است" },
-        { id: 2, title: "تعرفه نقره ای", price: 100000, options: `این تعرفه شامل اپشن های ..... است` },
-        { id: 3, title: "تعرفه برنز", price: 77000, options: "این تعرفه شامل اپشن های ..... است" }
-    ]
-}
 
 app.listen(port, () => console.log(`app run in port: ${port}`))
