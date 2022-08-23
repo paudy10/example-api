@@ -330,9 +330,10 @@ app.get("/api/v1/getprice", async (req, res, next) => {
     next();
 });
 
-app.get("/api/v1/getcontact", async (req, res, next) => {
-    const data = await Contact.find()
-    res.json(data);
+
+app.get("/api/v1/getusers", async (req, res, next) => {
+    const AllUsers = await User.find()
+    res.json(AllUsers);
     next();
 });
 
