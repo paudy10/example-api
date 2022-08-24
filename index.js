@@ -190,6 +190,23 @@ app.post("/api/v1/auth", async (req, res, next) => {
     }
 })
 
+app.post("/api/v1/deleteuser", async (req, res, next) => {
+    const { email } = req.body;
+    let FindUser = await User.findOne({
+        email
+    })
+    if (FindUser) {
+        FindUser.delete();
+        res.status(200).json({
+            msg: 'کاربر با موفقیت خذف شد !'
+        })
+    } else {
+        res.status(400).json({
+            msg: 'کاربر پیدا نشد !'
+        })
+    }
+})
+
 
 
 
