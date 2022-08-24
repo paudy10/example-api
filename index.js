@@ -347,6 +347,12 @@ app.get("/api/v1/getprice", async (req, res, next) => {
     next();
 });
 
+app.get("/api/v1/getcontact", async (req, res, next) => {
+    const contact = await Contact.find()
+    res.json(contact);
+    next();
+});
+
 
 app.get("/api/v1/getusers", async (req, res, next) => {
     const AllUsers = await User.find()
