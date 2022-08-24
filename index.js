@@ -198,11 +198,29 @@ app.post("/api/v1/deleteuser", async (req, res, next) => {
     if (FindUser) {
         FindUser.delete();
         res.status(200).json({
-            msg: 'کاربر با موفقیت خذف شد !'
+            msg: 'کاربر با موفقیت حذف شد !'
         })
     } else {
         res.status(400).json({
             msg: 'کاربر پیدا نشد !'
+        })
+    }
+})
+
+
+app.post("/api/v1/deletecontact", async (req, res, next) => {
+    const { creatAt } = req.body;
+    let Findpm = await Contact.findOne({
+        creatAt
+    })
+    if (Findpm) {
+        Findpm.delete();
+        res.status(200).json({
+            msg: 'پیام با موفقیت حذف شد !'
+        })
+    } else {
+        res.status(400).json({
+            msg: 'پیام پیدا نشد !'
         })
     }
 })
