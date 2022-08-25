@@ -190,6 +190,25 @@ app.post("/api/v1/auth", async (req, res, next) => {
     }
 })
 
+app.post("/api/v1/deleteblog", async (req, res, next) => {
+    const { id } = req.body;
+    let FindBlog = await Blog.findOne({
+        id
+    })
+    if (FindBlog) {
+        FindBlog.delete();
+        res.status(200).json({
+            msg: 'بلاگ با موفقیت حذف شد !'
+        })
+    } else {
+        res.status(400).json({
+            msg: 'بلاگ پیدا نشد !'
+        })
+    }
+    next()
+})
+
+
 app.post("/api/v1/deleteuser", async (req, res, next) => {
     const { email } = req.body;
     let FindUser = await User.findOne({
@@ -205,7 +224,9 @@ app.post("/api/v1/deleteuser", async (req, res, next) => {
             msg: 'کاربر پیدا نشد !'
         })
     }
+    next()
 })
+
 
 
 app.post("/api/v1/deletecontact", async (req, res, next) => {
@@ -223,6 +244,7 @@ app.post("/api/v1/deletecontact", async (req, res, next) => {
             msg: 'پیام پیدا نشد !'
         })
     }
+    next()
 })
 
 
