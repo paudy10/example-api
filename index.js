@@ -397,26 +397,33 @@ app.get("/api/v1/getblog/:id", (req, res, next) => {
 
 app.post("/api/v1/setblog", async (req, res, next) => {
     let { id, title, desc, img, alt, author } = req.body;
-    const existBlog = await Blog.findOne({
-        id
-    })
-    if (!existBlog) {
-        const newBlog = new Blog({
-            "id": id,
-            "title": title,
-            "desc": desc,
-            "img": img,
-            "alt": alt,
-            "author": author
-        })
-        await newBlog.save();
-        res.status(200).json({
-            msg: "بلاگ شما با موفقیت ساخته شد  !"
-        })
-    } else {
+    if (!id || !title || !desc || !img || !alt || !author) {
         res.status(400).json({
-            msg: "بلاگی با این آیدی موجود است  !"
+            msg: "تمام فیلد هارا پر کنید  !"
         })
+    }
+    else {
+        const existBlog = await Blog.findOne({
+            id
+        })
+        if (!existBlog) {
+            const newBlog = new Blog({
+                "id": id,
+                "title": title,
+                "desc": desc,
+                "img": img,
+                "alt": alt,
+                "author": author
+            })
+            await newBlog.save();
+            res.status(200).json({
+                msg: "بلاگ شما با موفقیت ساخته شد  !"
+            })
+        } else {
+            res.status(400).json({
+                msg: "بلاگی با این آیدی موجود است  !"
+            })
+        }
     }
     next()
 })
