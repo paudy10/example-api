@@ -293,8 +293,7 @@ app.post("/api/v1/signin", async (req, res, next) => {
                         isUser: FindUser.isUser,
                         username: FindUser.username,
                         password: FindUser.password,
-                        plan: FindUser.plan,
-                        appLength: FindUser.appLength
+                        plan: FindUser.plan
                     }
                 };
                 const jwtoken = jwt.sign(
