@@ -4,6 +4,7 @@ const InitiateMongoServer = require("./config/db");
 const User = require("./model/user");
 const Admin = require('./model/admin');
 const Blog = require("./model/blog");
+const Apps = require("./model/apps");
 const Contact = require("./model/contact");
 const Price = require('./model/price');
 const jwt = require("jsonwebtoken");
@@ -497,5 +498,44 @@ app.post("/api/v1/setprice", async (req, res, next) => {
     next()
 })
 
+app.post("/api/v1/createApp", async (req, res, next) => {
+    let { title, creator } = req.body;
+    const existApp = await Apps.findOne({
+        title
+    })
+    if (!existApp) {
+        const newApp = new Apps({
+            "title": title,
+            "creator": creator
+        })
+        await newApp.save();
+        res.status(200).json({
+            msg: " اَپ شما با موفقیت ساخته شد !"
+        })
+    } else {
+        res.status(400).json({
+            msg: "اَپلیکیشنی با این نام موجود می باشد !  !"
+        })
+    }
+    next()
+})
+
+app.post("/api/v1/deleteapp", async (req, res, next) => {
+    const { title } = req.body;
+    let FindApp = await Apps.findOne({
+        title
+    })
+    if (FindApp) {
+        FindApp.delete();
+        res.status(200).json({
+            msg: 'اَپ با موفقیت حذف شد !'
+        })
+    } else {
+        res.status(400).json({
+            msg: 'اَپ پیدا نشد !'
+        })
+    }
+    next()
+})
 
 app.listen(port, () => console.log(`app run in port: ${port}`))
