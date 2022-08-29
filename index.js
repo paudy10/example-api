@@ -504,7 +504,7 @@ app.post("/api/v1/setprice", async (req, res, next) => {
     next()
 })
 
-app.post("/api/v1/createApp", async (req, res, next) => {
+app.post("/api/v1/createapp", async (req, res, next) => {
     let { title, creator } = req.body;
     const existApp = await Apps.findOne({
         title
