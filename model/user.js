@@ -20,6 +20,10 @@ const UserSchema = mongoose.Schema({
   isUser: {
     type: Boolean,
     default: true
+  },
+  plan: {
+    type : String,
+    default: 'PlanFree'
   }
 });
 // export model user with UserSchema
