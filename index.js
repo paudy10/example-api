@@ -30,6 +30,12 @@ app.get("/api/v1/getblog", async (req, res, next) => {
     next();
 });
 
+app.get("/api/v1/getapps", async (req, res, next) => {
+    const apps = await Apps.find() 
+    res.json(apps);
+    next();
+});
+
 
 app.post("/api/v1/signup", async (req, res, next) => {
     const { username, email, password } = req.body;
