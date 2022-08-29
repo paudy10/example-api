@@ -22,8 +22,12 @@ const UserSchema = mongoose.Schema({
     default: true
   },
   plan: {
-    type : String,
+    type: String,
     default: 'PlanFree'
+  },
+  appLength: {
+    type: Number,
+    default: 0
   }
 });
 // export model user with UserSchema
