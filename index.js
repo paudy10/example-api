@@ -31,7 +31,7 @@ app.get("/api/v1/getblog", async (req, res, next) => {
 });
 
 app.get("/api/v1/getapps", async (req, res, next) => {
-    const apps = await Apps.find() 
+    const apps = await Apps.find()
     res.json(apps);
     next();
 });
@@ -425,6 +425,7 @@ app.get("/api/v1/getblog/:id", (req, res, next) => {
 
 
 
+
 app.post("/api/v1/setblog", async (req, res, next) => {
     let { id, title, desc, img, alt, author } = req.body;
     if (!id || !title || !desc || !img || !alt || !author) {
@@ -526,13 +527,14 @@ app.post("/api/v1/createapp", async (req, res, next) => {
     next()
 })
 
+
 app.post("/api/v1/deleteapp", async (req, res, next) => {
     const { title } = req.body;
     let FindApp = await Apps.findOne({
         title
     })
     if (FindApp) {
-        FindApp.delete();
+        await FindApp.delete();
         res.status(200).json({
             msg: 'اَپ با موفقیت حذف شد !'
         })
@@ -543,5 +545,37 @@ app.post("/api/v1/deleteapp", async (req, res, next) => {
     }
     next()
 })
+
+app.get("/api/v1/getapp/:appname", async (req, res, next) => {
+    const title = req.params.appname;
+    let Find = await Apps.findOne({ title })
+    if (Find) {
+      let email = Find.creator
+      let cr = await User.findOne({ email })
+      if (cr) {
+        res.status(200).json(cr)
+        next()
+      }
+      next()
+    }
+    next()
+  })
+
+  app.get("/api/v1/getuserapp/:user", async (req, res, next) => {
+    const email = req.params.user;
+    let Find = await User.findOne({ email })
+    if (Find) {
+      let creator = Find.email
+      let cr = await Apps.find({ creator })
+      if (cr) {
+        res.status(200).json(cr)
+        next()
+      }
+      next()
+    } else {
+      res.status(401).json("no app")
+    }
+    next()
+  })
 
 app.listen(port, () => console.log(`app run in port: ${port}`))
