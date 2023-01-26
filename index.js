@@ -7,8 +7,10 @@ const Blog = require("./model/blog");
 const Apps = require("./model/apps");
 const Contact = require("./model/contact");
 const Price = require('./model/price');
+const Cart = require('./model/cart');
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const price = require('./model/price');
 const port = 3001;
 
 
@@ -394,6 +396,11 @@ app.get("/api/v1/getprice", async (req, res, next) => {
     res.json(price);
     next();
 });
+app.get("/api/v1/getcart", async (req, res, next) => {
+    const cart = await Cart.find()
+    res.json(cart);
+    next();
+});
 
 app.get("/api/v1/getcontact", async (req, res, next) => {
     const contact = await Contact.find()
@@ -427,8 +434,8 @@ app.get("/api/v1/getblog/:id", (req, res, next) => {
 
 
 app.post("/api/v1/setblog", async (req, res, next) => {
-    let { id, title, desc, img, alt, author } = req.body;
-    if (!id || !title || !desc || !img || !alt || !author) {
+    let { id, title, desc, img, alt, author, price } = req.body;
+    if (!id || !title || !desc || !img || !alt || !author || !price) {
         res.status(400).json({
             msg: "تمام فیلد هارا پر کنید  !"
         })
@@ -444,7 +451,8 @@ app.post("/api/v1/setblog", async (req, res, next) => {
                 "desc": desc,
                 "img": img,
                 "alt": alt,
-                "author": author
+                "author": author,
+                "price": price
             })
             await newBlog.save();
             res.status(200).json({
@@ -504,6 +512,29 @@ app.post("/api/v1/setprice", async (req, res, next) => {
     }
     next()
 })
+app.post("/api/v1/cart", async (req, res, next) => {
+    let { userId , proId, title, price} = req.body;
+    const existCart = await Cart.findOne({
+        proId
+    })
+    if (!existCart) {
+        const newCart = new Cart({
+            "proId": proId,
+            "userId": userId,
+            "title": title,
+            "price": price
+        })
+        await newCart.save();
+        res.status(200).json({
+            msg: `محصول ${title} با موفقیت به سبد خرید اضافه شد`
+        })
+    } else {
+        res.status(400).json({
+            msg: " این محصول در سبد خرید موجود است!"
+        })
+    }
+    next()
+})
 
 app.post("/api/v1/createapp", async (req, res, next) => {
     let { title, creator } = req.body;
@@ -546,36 +577,54 @@ app.post("/api/v1/deleteapp", async (req, res, next) => {
     next()
 })
 
+app.post("/api/v1/deletecart", async (req, res, next) => {
+    const { proId , userId } = req.body;
+    let Findpro = await Cart.findOne({
+        proId , userId
+    })
+    if (Findpro) {
+        await Findpro.delete();
+        res.status(200).json({
+            msg: 'محصول از سبد با موفقیت حذف شد !'
+        })
+    } else {
+        res.status(400).json({
+            msg: ' پیدا نشد !'
+        })
+    }
+    next()
+})
+
 app.get("/api/v1/getapp/:appname", async (req, res, next) => {
     const title = req.params.appname;
     let Find = await Apps.findOne({ title })
     if (Find) {
-      let email = Find.creator
-      let cr = await User.findOne({ email })
-      if (cr) {
-        res.status(200).json(cr)
+        let email = Find.creator
+        let cr = await User.findOne({ email })
+        if (cr) {
+            res.status(200).json(cr)
+            next()
+        }
         next()
-      }
-      next()
     }
     next()
-  })
+})
 
-  app.get("/api/v1/getuserapp/:user", async (req, res, next) => {
+app.get("/api/v1/getuserapp/:user", async (req, res, next) => {
     const email = req.params.user;
     let Find = await User.findOne({ email })
     if (Find) {
-      let creator = Find.email
-      let cr = await Apps.find({ creator })
-      if (cr) {
-        res.status(200).json(cr)
+        let creator = Find.email
+        let cr = await Apps.find({ creator })
+        if (cr) {
+            res.status(200).json(cr)
+            next()
+        }
         next()
-      }
-      next()
     } else {
-      res.status(401).json("no app")
+        res.status(401).json("no app")
     }
     next()
-  })
+})
 
 app.listen(port, () => console.log(`app run in port: ${port}`))

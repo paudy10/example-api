@@ -28,6 +28,10 @@ const BlogSchema = mongoose.Schema({
     alt: {
         type: String,
         required: true
+    },
+    price: {
+        type: Number,
+        required: true
     }
 });
 
